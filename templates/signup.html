@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Create Account - ItemLocation_Tracker</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at top left, #6c63ff, #2B2637, #1f1c29);
+      overflow: hidden;
+      font-family: 'Poppins', sans-serif;
+      position: relative;
+    }
+
+    /* Floating neon blobs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.6;
+      animation: float 8s infinite ease-in-out alternate;
+    }
+
+    .orb.one {
+      width: 300px;
+      height: 300px;
+      background: #66FCF1;
+      top: 15%;
+      left: 10%;
+    }
+
+    .orb.two {
+      width: 350px;
+      height: 350px;
+      background: #6C63FF;
+      bottom: 10%;
+      right: 10%;
+    }
+
+    @keyframes float {
+      from { transform: translateY(0px); }
+      to { transform: translateY(40px); }
+    }
+
+    .main-box {
+      width: 800px;
+      height: 500px;
+      border-radius: 10px;
+      border: 2px solid rgba(255,255,255,0.15);
+      background: rgba(43, 38, 55, 0.7);
+      backdrop-filter: blur(10px);
+      box-shadow:
+        0 10px 25px rgba(0,0,0,0.5),
+        0 0 25px rgba(255,255,255,0.1);
+      transform: scale(1.05) translateY(-5px);
+      transition: all 0.5s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      z-index: 1;
+    }
+
+    .image {
+      position: absolute;
+      width: 350px;
+      height: 400px;
+      top: 45%;
+      right: 73%;
+      transform: translate(-50%, -50%) scale(1.1);
+      border-radius: 10px;
+      transition: opacity 1s ease-in-out;
+    }
+
+    #img1 { opacity: 1; z-index: 2; }
+    #img2 { opacity: 0; z-index: 2; }
+
+    .text {
+      font-size: 22px;
+      font-weight: 500;
+      color: white;
+      letter-spacing: 0.5px;
+      opacity: 1;
+      transition: opacity 1s ease-in-out;
+      z-index: 2;
+      position: absolute;
+      top: 145%;
+      right: 115%;
+      text-align: center;
+      width: 400px;
+    }
+
+    h1 {
+      z-index: 2;
+      position: absolute;
+      left: 53%;
+      top: 10%;
+      font-size: 40px;
+      color: white;
+      text-align: center;
+    }
+
+    .form-container {
+      position: absolute;
+      top: 30%;
+      left: 67%;
+      transform: translateX(-50%);
+      z-index: 2;
+      width: 350px;
+      color: white;
+      text-align: center;
+    }
+
+    .form-container p {
+      margin-top: 5px;
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    .form-container a {
+      color: #66FCF1;
+    }
+
+    .form-container a:hover {
+      text-decoration: underline;
+    }
+
+    .input-group {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 95%;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      background-color: rgba(255,255,255,0.1);
+      color: white;
+      outline: none;
+      font-size: 14px;
+      box-shadow: inset 0 0 5px rgba(255,255,255,0.2);
+      transition: box-shadow 0.3s ease, background-color 0.3s ease;
+    }
+
+    input:focus {
+      box-shadow: 0 0 10px #66FCF1;
+      background-color: rgba(255,255,255,0.15);
+    }
+
+    input::placeholder {
+      color: #bfbfbf;
+    }
+
+    input.error {
+      box-shadow: 0 0 5px red;
+      border: 1px solid red;
+    }
+
+    .error-message {
+      color: #ff6b6b;
+      font-size: 13px;
+      margin-top: 5px;
+      display: none;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 10px;
+      background: linear-gradient(90deg, #66FCF1, #45B7AF);
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #2B2637;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.3s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 15px rgba(102,252,241,0.5);
+    }
+  </style>
+</head>
+<body>
+
+    <p style="color: white; text-align: center; z-index:3; position:absolute; right:18%; top:65%;">{{ msg }}</p>
+
+
+  <!-- glowing background orbs -->
+  <div class="orb one"></div>
+  <div class="orb two"></div>
+
+  <div class="main-box"></div>
+
+  <h1>Create an account</h1>
+
+  <div class="form-container">
+    <p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+
+    <div class="input-group">
+
+     <form action="{{ url_for('signup') }}" method="POST">
+        <div class="input-group">
+          <input id="fname" name="fname" type="text" placeholder="First name" required>
+          <input id="lname" name="lname" type="text" placeholder="Last name" required>
+        </div>
+
+        <input id="email" name="email" type="email" placeholder="Email" required style="margin-top:10px;">
+        <input id="password" name="password" type="password" placeholder="Password" required style="margin-top:10px;">
+
+        <button type="submit">Create Account</button>
+        <p class="error-message">{{ msg }}</p>
+    </form>
+
+  </div>
+
+    <img id="img1" src="{{ url_for('static', filename='map.jpg') }}" class="image" alt="Map 1">
+    <img id="img2" src="{{ url_for('static', filename='map3.png') }}" class="image" alt="Map 2">
+
+
+
+  <div id="text1" class="text">Upload your area’s blueprint in seconds.</div>
+  <div id="text2" class="text">Never lose track — mark your items with ease.</div>
+
+  <script>
+    window.onload = function() {
+      let showFirst = true;
+      const img1 = document.getElementById('img1');
+      const img2 = document.getElementById('img2');
+      const text1 = document.getElementById('text1');
+      const text2 = document.getElementById('text2');
+
+      // Initial state
+      img1.style.opacity = 1;
+      img2.style.opacity = 0;
+      text1.style.opacity = 1;
+      text2.style.opacity = 0;
+
+      setInterval(() => {
+        if (showFirst) {
+          img1.style.opacity = 0;
+          img2.style.opacity = 1;
+          text1.style.opacity = 0;
+          text2.style.opacity = 1;
+        } else {
+          img1.style.opacity = 1;
+          img2.style.opacity = 0;
+          text1.style.opacity = 1;
+          text2.style.opacity = 0;
+        }
+        showFirst = !showFirst;
+      }, 5000);
+    };
+
+
+    // form validation
+    const createBtn = document.getElementById("createBtn");
+    const inputs = [
+      document.getElementById("fname"),
+      document.getElementById("lname"),
+      document.getElementById("email"),
+      document.getElementById("password")
+    ];
+    const errorMsg = document.getElementById("error");
+
+    createBtn.addEventListener("click", () => {
+      let hasError = false;
+      inputs.forEach(input => {
+        if (input.value.trim() === "") {
+          input.classList.add("error");
+          hasError = true;
+        } else {
+          input.classList.remove("error");
+        }
+      });
+
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Login - ItemLocation_Tracker</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at top left, #6c63ff, #2B2637, #1f1c29);
+      font-family: 'Poppins', sans-serif;
+      overflow: hidden;
+    }
+
+    .login-box {
+      width: 380px;
+      padding: 40px 35px;
+      border-radius: 15px;
+      background: rgba(45, 40, 65, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      box-shadow:
+        0 10px 30px rgba(0,0,0,0.6),
+        0 0 30px rgba(255,255,255,0.08);
+      text-align: center;
+      color: white;
+      z-index: 2;
+      animation: fadeIn 1s ease;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 32px;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+      color: #ffffff;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #bfbfbf;
+      margin-bottom: 25px;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      width: 80%;
+      padding: 12px 45px 12px 12px;
+      border: none;
+      border-radius: 8px;
+      background-color: rgba(255,255,255,0.1);
+      color: white;
+      font-size: 14px;
+      outline: none;
+      margin-top: 15px;
+      transition: box-shadow 0.3s ease, background-color 0.3s ease;
+    }
+
+    input::placeholder {
+      color: #bfbfbf;
+    }
+
+    input:focus {
+      box-shadow: 0 0 10px #66FCF1;
+      background-color: rgba(255,255,255,0.15);
+    }
+
+    .password-container {
+      position: relative;
+    }
+
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #ccc;
+      cursor: pointer;
+      font-size: 18px;
+      transition: color 0.2s;
+    }
+
+    .toggle-password:hover {
+      color: #66FCF1;
+    }
+
+    .checkbox {
+      margin-top: 15px;
+      text-align: left;
+      font-size: 13px;
+      color: #ccc;
+      display: flex;
+      align-items: center;
+    }
+
+    .checkbox input {
+      margin-right: 8px;
+      accent-color: #66FCF1;
+    }
+
+    button {
+      margin-top: 25px;
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(90deg, #66FCF1, #45B7AF);
+      border: none;
+      border-radius: 8px;
+      color: #2B2637;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.3s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 15px rgba(102,252,241,0.5);
+    }
+
+    .error-message {
+      color: #ff6b6b;
+      font-size: 13px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .footer {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    .footer a {
+      color: #66FCF1;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Animated glowing orbs in background */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.6;
+      animation: float 8s infinite ease-in-out alternate;
+    }
+
+    .orb.one {
+      width: 250px;
+      height: 250px;
+      background: #66FCF1;
+      top: 15%;
+      left: 10%;
+    }
+
+    .orb.two {
+      width: 300px;
+      height: 300px;
+      background: #6C63FF;
+      bottom: 10%;
+      right: 10%;
+    }
+
+    @keyframes float {
+      from { transform: translateY(0px); }
+      to { transform: translateY(40px); }
+    }
+  </style>
+</head>
+<body>
+
+
+  <!-- Background light effects -->
+  <div class="orb one"></div>
+  <div class="orb two"></div>
+
+  <div class="login-box">
+    <h1>Welcome Back</h1>
+    <p class="subtitle">Sign in to continue tracking your items</p>
+
+    <form action="{{ url_for('login') }}" method="POST">
+      <input id="email" name="email" type="email" placeholder="Email" required>
+      <div class="password-container">
+        <input id="password" name="password" type="password" placeholder="Password" required>
+      </div>
+
+      <div class="checkbox">
+        <input type="checkbox" id="remember">
+        <label for="remember">Remember me</label>
+      </div>
+
+      <button type="submit">Login</button>
+      <p class="error-message">{{ msg }}</p>
+    </form>
+
+    <div class="footer">
+      <p><a href="#">Forgot Password?</a></p>
+      <p>Don't have an account? <a href="{{ url_for('signup') }}">Create one</a></p>
+    </div>
+  </div>
+
+  <script>
+
+    // Simple form validation
+    const loginBtn = document.getElementById("loginBtn");
+    const errorMsg = document.getElementById("error");
+    loginBtn.addEventListener("click", () => {
+      const email = document.getElementById("email");
+      const password = document.getElementById("password");
+      let hasError = false;
+
+      if (email.value.trim() === "" || password.value.trim() === "") {
+        hasError = true;
+        email.classList.add("error");
+        password.classList.add("error");
+      } else {
+        email.classList.remove("error");
+        password.classList.remove("error");
+      }
+
+    });
+  </script>
+
+</body>
+</html>
