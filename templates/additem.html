@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Item — Item Tracker</title>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at top left, #6c63ff, #2B2637, #1f1c29);
+      overflow: hidden;
+      font-family: 'Poppins', sans-serif;
+      position: relative;
+      color: white;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.6;
+      animation: float 8s infinite ease-in-out alternate;
+    }
+
+    .orb.one {
+      width: 250px;
+      height: 250px;
+      background: #66FCF1;
+      top: 15%;
+      left: 10%;
+    }
+
+    .orb.two {
+      width: 300px;
+      height: 300px;
+      background: #6C63FF;
+      bottom: 10%;
+      right: 10%;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      100% { transform: translateY(-40px); }
+    }
+
+    h1 {
+      position: absolute;
+      top: 0%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.8rem;
+      color: #66FCF1;
+      z-index: 5;
+    }
+
+    hr {
+      position: absolute;
+      top: 8%;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      border: none;
+      background: linear-gradient(90deg, #66FCF1, #6C63FF);
+      box-shadow: 0 0 15px rgba(102,252,241,0.4);
+    }
+
+    .image {
+      width: 550px;
+      height: 350px;
+      position: absolute;
+      top: 13%;
+      left: 45%;
+      border-radius: 12px;
+      cursor: crosshair;
+    }
+
+    .input-value {
+      position: absolute;
+      top: 15%;
+      left: 5%;
+      z-index: 10;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 0 25px rgba(102,252,241,0.15);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 300px;
+    }
+
+    label {
+      color: #f5f5f5;
+      font-weight: 500;
+    }
+
+    input {
+      width: 95%;
+      padding: 10px;
+      border: none;
+      border-bottom: 2px solid rgba(255,255,255,0.2);
+      background-color: transparent;
+      color: white;
+      outline: none;
+      font-size: 14px;
+      box-shadow: inset 0 0 5px rgba(255,255,255,0.2);
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+
+    input:focus {
+      border-bottom: 2px solid #66FCF1;
+      box-shadow: 0 2px 10px rgba(102,252,241,0.3);
+    }
+
+    .sub button {
+      width: 100%;
+      margin-top: 15px;
+      background: linear-gradient(90deg, #66FCF1, #45B7AF);
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #2B2637;
+      padding: 12px 25px;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 15px rgba(102,252,241,0.4);
+    }
+
+    .sub button:hover {
+      transform: scale(1.08);
+      box-shadow: 0 5px 20px rgba(102,252,241,0.6);
+    }
+
+    #coord-display {
+      position: absolute;
+      bottom: 5%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 14px;
+      color: #66FCF1;
+      text-shadow: 0 0 10px rgba(102,252,241,0.6);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="orb one"></div>
+  <div class="orb two"></div>
+  <hr>
+
+  <h1>GET READY TO INSERT A NEW RECORD</h1>
+
+  <form action="{{ url_for('mainpage') }}" method="POST">
+  <div class="input-value">
+    <label for="ItemName">ITEM NAME</label>
+    <input type="text" id="ItemName" name="ItemName" required>
+
+    <label for="Loc">LOCATION</label>
+    <input type="text" id="Loc" name="Loc" placeholder="e.g., kitchen drawer">
+
+    <label for="Coordinates">COORDINATES</label>
+    <input type="text" id="Coordinates" name="Coordinates" placeholder="Click on map to set coordinates" required>
+
+    <label for="available">AVAILABLE</label>
+    <input type="text" id="available" name="available" required>
+
+    <div class="sub">
+      <button type="submit">Submit</button>
+    </div>
+  </div>
+</form>
+
+
+  <img id="mapImage" src="{{ url_for('static', filename='map.jpg') }}" class="image" alt="Map image">
+
+  <p id="coord-display"></p>
+
+  <script>
+    const img = document.getElementById('mapImage');
+    const coordDisplay = document.getElementById('coord-display');
+    const coordField = document.getElementById('Coordinates');
+
+    // Show coordinates while hovering
+    img.addEventListener('mousemove', (event) => {
+      const rect = img.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      coordDisplay.textContent = `X: ${x.toFixed(1)}, Y: ${y.toFixed(1)}`;
+    });
+
+    img.addEventListener('mouseleave', () => {
+      coordDisplay.textContent = '';
+    });
+
+    // On click: record coordinates in field + show glowing dot
+    img.addEventListener('click', (event) => {
+      const rect = img.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      const coordinates = `${x.toFixed(1)}, ${y.toFixed(1)}`;
+      coordField.value = coordinates;
+
+      // Optional: create glowing dot
+      const dot = document.createElement('div');
+      dot.style.position = 'absolute';
+      dot.style.width = '10px';
+      dot.style.height = '10px';
+      dot.style.borderRadius = '50%';
+      dot.style.background = 'yellow';
+      dot.style.boxShadow = '0 0 10px #66FCF1';
+      dot.style.left = (rect.left + x - 5) + 'px';
+      dot.style.top = (rect.top + y - 5) + 'px';
+      document.body.appendChild(dot);
+    });
+  </script>
+</body>
+</html>

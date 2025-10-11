@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Item Tracker — Main Page</title>
+
+  <style>
+    body {
+      margin: 0;
+      <--!overflow-y: auto;
+      overflow:hidden;
+      min-height: 100vh;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      background: radial-gradient(circle at top left, #6c63ff, #2B2637, #1f1c29);
+      font-family: 'Poppins', sans-serif;
+      position: relative;
+    }
+
+    /* Floating neon blobs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.6;
+      animation: float 8s infinite ease-in-out alternate;
+      z-index: 0;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 60%;
+      margin-left: 380px;  /* keep your positioning */
+      margin-top: 470px;   /* stays visually in same spot */
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 20px rgba(102, 252, 241, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: block;
+      max-height: 140px;
+      overflow-y: auto;
+    }
+
+    th, td {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 14px;
+      text-align: left;
+      color: #f5f5f5;
+    }
+
+    th {
+      background: rgba(102, 252, 241, 0.15);
+      color: #66FCF1;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    tr:hover {
+      background: rgba(102, 252, 241, 0.08);
+    }
+
+
+    .orb.one {
+      width: 300px;
+      height: 300px;
+      background: #66FCF1;
+      top: 15%;
+      left: 10%;
+      animation-delay: 0s;
+    }
+
+    .orb.two {
+      width: 350px;
+      height: 350px;
+      background: #6C63FF;
+      bottom: 10%;
+      right: 10%;
+      animation-delay: 3s;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      100% { transform: translateY(-40px); }
+    }
+
+    /* --- The new frame --- */
+    .button-frame {
+      position: absolute;
+      left: 2%;
+      top:10%;
+      z-index: 2;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 40px 30px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 0 25px rgba(102, 252, 241, 0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 18px;
+    }
+
+    .top-banner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background-color: teal;
+    z-index: 10;
+    shadow:10%;
+  }
+
+    /* Title inside frame */
+    .button-frame h1 {
+      color: #66FCF1;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      text-shadow: 0 0 15px rgba(102, 252, 241, 0.4);
+    }
+
+    /* --- Buttons --- */
+    .my-btn {
+      width: 220px;
+      padding: 12px;
+      background: linear-gradient(90deg, #66FCF1, #45B7AF);
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #2B2637;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.3s ease;
+    }
+
+    .my-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(102, 252, 241, 0.4);
+    }
+
+    .image {
+      width: 550px;
+      height: 350px;
+      position: absolute;
+      top: 13%;
+      left: 45%;
+      border-radius: 12px;
+      cursor: crosshair;
+    }
+
+    #dot {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #ff5555;
+    border: 2px solid white;
+    box-shadow: 0 0 15px rgba(255, 80, 80, 0.9);
+    display: none; /* hidden until clicked */
+    z-index: 5;
+    transition: all 0.3s ease;
+  }
+
+
+  </style>
+</head>
+
+<body>
+  <!-- Glowing blobs -->
+  <div class="orb one"></div>
+  <div class="orb two"></div>
+  <div class="top-banner"></div>
+
+  <div class="button-frame">
+    <h1>🧭 Item Tracker</h1>
+    <a href="{{ url_for('additem') }}"><button class="my-btn">Add New Item</button></a>
+    <button id="btn3" class="my-btn">Delete Item</button>
+    <button id="btn4" class="my-btn">Edit Item</button>
+    <a href="{{ url_for('logout') }}"><button class="my-btn">Logout</button></a>
+  </div>
+
+<table>
+  <tr>
+    <th>Item ID</th>
+    <th>Item Name</th>
+    <th>Location</th>
+    <th>Coordinates</th>
+    <th>Date Added</th>
+    <th>Status</th>
+  </tr>
+
+  {% for item in items %}
+<tr class="item-row" data-coordinates="{{ item.coordinates }}">
+  <td>{{ item.id }}</td>
+  <td>{{ item.itemname }}</td>
+  <td>{{ item.location }}</td>
+  <td>{{ item.coordinates }}</td>
+  <td>{{ item.dates }}</td>
+  <td>{{ item.available }}</td>
+</tr>
+{% else %}
+<tr>
+  <td colspan="6" style="text-align:center; color:gray;">No items found.</td>
+</tr>
+{% endfor %}
+</table>
+
+
+  <img src="{{ url_for('static', filename='map.jpg') }}" class="image">
+  <div id="dot"></div>
+
+  <script>
+  document.getElementById("btn2").addEventListener("click", function() {
+    window.location.href = "{{ url_for('additem') }}";
+  });
+</script>
+
+  <script>
+document.querySelectorAll('.item-row').forEach(row => {
+  row.addEventListener('click', function() {
+    const coordText = this.getAttribute('data-coordinates');
+    if (!coordText) return;
+
+    // Expecting "x,y" format in coordinates (e.g., "120,250")
+    const [x, y] = coordText.split(',').map(Number);
+
+    const map = document.querySelector('.image');
+    const dot = document.getElementById('dot');
+    const rect = map.getBoundingClientRect();
+
+    // Place dot relative to map's top-left corner
+    dot.style.left = rect.left + x + 'px';
+    dot.style.top = rect.top + y + 'px';
+    dot.style.display = 'block';
+  });
+});
+</script>
+
+
+
+</body>
+</html>
+
