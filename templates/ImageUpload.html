@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Image</title>
+
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      min-height: 100vh;
+      background: radial-gradient(circle at top left, #6c63ff, #2B2637, #1f1c29);
+      font-family: 'Poppins', sans-serif;
+      position: relative;
+      color: white;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.6;
+      z-index: 0;
+    }
+
+    .orb.one {
+      width: 300px;
+      height: 300px;
+      background: #66FCF1;
+      top: 15%;
+      left: 10%;
+    }
+
+    .orb.two {
+      width: 350px;
+      height: 350px;
+      background: #6C63FF;
+      bottom: 10%;
+      right: 10%;
+    }
+
+    .top-banner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 50px;
+      background-color: teal;
+      z-index: 1;
+    }
+
+    form {
+      position: absolute;
+      top: 55%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      width: 400px;
+      height: 250px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    }
+
+    label {
+      position: absolute;
+      font-family: Arial;
+      font-size: 20px;
+      top: 20%;
+      left: 25%;
+      color: white;
+    }
+
+    input[type="file"] {
+      position: absolute;
+      top: 45%;
+      left: 25%;
+      background: purple;
+      color: white;
+      padding: 6px;
+      border-radius: 4px;
+    }
+
+    button {
+      position: absolute;
+      top: 70%;
+      left: 40%;
+      background: teal;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #009999;
+    }
+
+
+    .chatgpt-banner {
+      position: absolute;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 22px;
+      z-index: 5;
+    }
+
+    .chatgpt-banner a {
+      text-decoration: none;
+      color: #66FCF1;
+      font-weight: 600;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .chatgpt-banner a:hover {
+      color: #ffffff;
+      text-shadow: 0 0 20px #66FCF1, 0 0 30px #66FCF1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="orb one"></div>
+  <div class="orb two"></div>
+  <div class="top-banner"></div>
+
+  <!-- 🟢 ChatGPT link banner -->
+  <div class="chatgpt-banner">
+    Want a map? <a href="https://chat.openai.com" target="_blank">Generate one from ChatGPT</a>
+  </div>
+
+  <form method="POST" action="{{ url_for('upload') }}" enctype="multipart/form-data">
+    <label for="file">Upload your image:</label>
+    <input type="file" id="file" name="file" accept="image/*" required>
+    <button type="submit">Upload</button>
+  </form>
+
+</body>
+</html>
