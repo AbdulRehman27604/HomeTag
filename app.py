@@ -43,6 +43,7 @@ class UserItems(db.Model):
     dates = db.Column(db.String(100))
     available = db.Column(db.String(50))
 
+
 class UserImages(db.Model):
     __tablename__ = 'userimages'
 
@@ -79,6 +80,7 @@ def login():
 
     return render_template('login.html')
 
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -110,6 +112,7 @@ def signup():
 
     return render_template('signup.html')
 
+
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
 
@@ -136,6 +139,7 @@ def upload():
             print("No file received")
 
     return render_template('ImageUpload.html')
+
 
 @app.route('/mainpage', methods=['GET', 'POST'])
 def mainpage():
@@ -176,7 +180,6 @@ def mainpage():
     return render_template('mainpage.html', items=items, image_url=image_url)
 
 
-
 @app.route('/additem')
 def additem():
     if 'user' not in session:
@@ -195,8 +198,12 @@ def logout():
     return redirect(url_for('login'))
 
 
+with app.app_context():
+    try:
+        db.create_all()
+        print("Database tables checked/created successfully.")
+    except Exception as e:
+        print("Database initialization failed:", e)
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
     app.run(debug=True)
