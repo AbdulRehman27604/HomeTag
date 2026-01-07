@@ -5,20 +5,16 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from flask import Flask, render_template, redirect, url_for, request, session
 
-
 app = Flask(__name__)
-app.secret_key = "dfsfscasfvsrvsvasavawev"
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:Stack2764@localhost/Tracker'
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://hometag_db_user:hChQAQXkhGsuGxCiZgEOjruFYqF7dBGf@dpg-d3i8vrripnbc73dvqqjg-a/hometag_db'
-#app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://hometag_db_user:hChQAQXkhGsuGxCiZgEOjruFYqF7dBGf@dpg-d3i8vrripnbc73dvqqjg-a.oregon-postgres.render.com/hometag_db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+app.secret_key = os.environ.get("SECRET_KEY")
+
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 cloudinary.config(
-    cloud_name="dsvzgjv9d",
-    api_key="515266151663176",
-    api_secret="gbqfJ7R9aK4SSh2zTx5dqHT2DXs"
+    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.environ.get("CLOUDINARY_API_KEY"),
+    api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
 )
 
 class User(db.Model):
